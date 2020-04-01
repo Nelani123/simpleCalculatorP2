@@ -1,72 +1,73 @@
-module.exports = class Calculator {
-    constructor() {
-        this.slotArr = [];
-        this.slotResults = [];
-        this.prev = 0;
+'use strict';
+
+class Calculator {
+  constructor() {
+    this.lastNum = 0;
+    this.slot = [];
+  }
+
+  add(...args) {
+    let sum = 0;
+    for (let num of args) {
+      if (num == 'Last') {
+        num = this.last();
+      }
+      else if (num == 'slot_' + (num.toString().charAt(num.length - 1))) {
+        console.log((num.charAt(num.length - 1)), 'we are here')
+        sum += this.get_slot(num.charAt(num.length - 1))
+      } else if (!isNaN(num)) {
+        sum += num;
+      }
+      console.log(num, 'also here');
     }
-​
-    add() {
-        let sum = 0;
-        // Loop through each number while adding it
-        for(let i = 0; i < arguments.length; i++) {
-            if(arguments[i] === 'LAST') {
-                arguments[i] = this.prev;
-            }
-​
-            sum += arguments[i];
-            arguments[i] = this.prev;
-            this.prev = sum;
+
+
+    multiply(...args){
+      let sum = 1;
+      for (let num of args) {
+        if (num == 'Last') {
+          num = this.last();
         }
-        this.slotResults.push(sum);
-​
-        // Return the final sum of the numbers added together
-        return sum;
+      else if (num == 'slot_' + (num.toString().charAt(num.length - 1))) {
+        console.log((num.charAt(num.length - 1)), 'we are here');
+        sum += this.get_slot(num.charAt(num.length - 1));
+      } else if (!isNaN(num)) {
+        sum += num;
+      }
+      console.log(num, 'also here');
+    }
+  }
+      this.lastAns = Answer;
+      return Answer;
     }
 
-    multiply() {
-        let sum = 1;
-        // Loop through each number while multiplying it
-        for(let i = 0; i < arguments.length; i++) {
-            if(arguments[i] === 'LAST') {
-                arguments[i] = this.prev;
-            }
-​
-            sum += arguments[i];
-            arguments[i] = this.prev;
-            this.prev = sum;
-        }
-        this.slotResults.push(sum);
-​
-        // Return the final sum of the numbers multiplied together
-        return sum;
-    }
+  last(){
+    return this.lastAns;
+  }
 
-    last() {
-        return this.prev;
-    }
-​
-    
-    set_slot(slot){
-        this.slotArr.push(slot);
-    }
-​
-    get_slot(slot){
-        let slotResultPos = slot - 1;
-        let slotResult = this.slotResults[slotResultPos];
-        return slotResult;
-    }
-};
+  set_slot(num){
+this.arr.push(this.lastAns);
+   return this.arr[num - 1];
+  };
+  
+  get_slot(num) {
+    return this.arr[num - 1];
+  }
+}
 
-let calculator = new calc;
-​
-console.log(calculator.add(1,2));
-console.log(calculator.add("LAST",5))
-calculator.set_slot(1);
-console.log("slot results");
-console.log(calculator.get_slot(1));
-console.log(calculator.add(10,20));
-calculator.set_slot(2);
-console.log(calculator.get_slot(2));
-​
+
+let casio = new Calculator();
+console.log(casio.add(100, 200), 'should return 300');
+console.log(casio.add(10, 20), 'should return 30');
+console.log(casio.get_slot(1), 'should return 300');
+console.log(casio.get_slot(2), 'should return 30');
+console.log(casio.last(), 'should return 30');
+console.log(casio.add('Last', 10), 'should return 40 for using last');
+console.log(casio.add('slot_2', 10), 'should return 40 for using slot');
+console.log(casio.add('slot_', 10), 'should return 30 pics');
+module.exports = { Calculator }
+
+
+
 
 
