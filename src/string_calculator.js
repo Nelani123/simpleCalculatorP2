@@ -1,73 +1,79 @@
-'use strict';
+'Use strict'
 
-class Calculator {
-  constructor() {
-    this.lastNum = 0;
-    this.slot = [];
+class calculator{
+
+  constructor(){
+    this.regex = /\d+/g;
+    this.lastValue = 0;
+    this.slots = {};
   }
 
-  add(...args) {
+  add(){
     let sum = 0;
-    for (let num of args) {
-      if (num == 'Last') {
-        num = this.last();
-      }
-      else if (num == 'slot_' + (num.toString().charAt(num.length - 1))) {
-        console.log((num.charAt(num.length - 1)), 'we are here')
-        sum += this.get_slot(num.charAt(num.length - 1))
-      } else if (!isNaN(num)) {
-        sum += num;
-      }
-      console.log(num, 'also here');
-    }
+    let i = 0;
+    for(;i<arguments.length;i++){
+      if(arguments[i]==='LAST'){
+        sum += parseInt(this.lastValue);
+      }else if(arguments[i] !="LAST" && typeof(arguments[i])=='string'){
+        let getNum = arguments[i].match(this.regex);
+        sum = sum + parseInt(Object.values(this.slots[getNum])[0]);
 
-
-    multiply(...args){
-      let sum = 1;
-      for (let num of args) {
-        if (num == 'Last') {
-          num = this.last();
-        }
-      else if (num == 'slot_' + (num.toString().charAt(num.length - 1))) {
-        console.log((num.charAt(num.length - 1)), 'we are here');
-        sum += this.get_slot(num.charAt(num.length - 1));
-      } else if (!isNaN(num)) {
-        sum += num;
       }
-      console.log(num, 'also here');
+      else
+      {
+        sum += parseInt(arguments[i]);
+      }
     }
+    this.lastValue = sum;
+    return sum;
   }
-      this.lastAns = Answer;
-      return Answer;
+
+  multiply(){
+    let product = 1;
+    for (var i = 0; i < arguments.length; i++){
+      if (arguments[i] === `LAST`) {
+        product *= parseInt(this.last());
+      }else if (arguments[i] != `LAST` && typeof (arguments[i]) == `string`){
+        let getNum = arguments[i].match(this.regex);
+        product *= parseInt(Object.values(this.slots[getNum])[0]);
+      } else {
+        product *= parseInt(arguments[i]);
+      }
     }
+    this.last_value = product;
+    return product;
+  }
 
   last(){
-    return this.lastAns;
+    return parseInt(this.lastValue)
   }
 
   set_slot(num){
-this.arr.push(this.lastAns);
-   return this.arr[num - 1];
-  };
-  
-  get_slot(num) {
-    return this.arr[num - 1];
+    this.slots[num] = {number:this.last()}
+    const slotResult = Object.values(this.slots[num]);
+    return slotResult;
+  }
+
+  get_slot(index){
+    this.slot_results = this.slots[index]
+
+    return parseInt(this.slot_results);
   }
 }
+const calc = new calculator();
 
+console.log(calc.add(3,5));
+console.log(calc.multiply(30,2));
 
-let casio = new Calculator();
-console.log(casio.add(100, 200), 'should return 300');
-console.log(casio.add(10, 20), 'should return 30');
-console.log(casio.get_slot(1), 'should return 300');
-console.log(casio.get_slot(2), 'should return 30');
-console.log(casio.last(), 'should return 30');
-console.log(casio.add('Last', 10), 'should return 40 for using last');
-console.log(casio.add('slot_2', 10), 'should return 40 for using slot');
-console.log(casio.add('slot_', 10), 'should return 30 pics');
-module.exports = { Calculator }
+console.log(calc.add(3,5,2));
 
+console.log(calc.add(1,2));
+console.log(calc.multiply("LAST",5));
 
+console.log(calc.add(1,2));
+console.log(calc.multiply(10,20));
+console.log(calc.add(100,200));
 
+console.log(calc.add("LAST",10));
 
-
+module.exports = { calculator }
